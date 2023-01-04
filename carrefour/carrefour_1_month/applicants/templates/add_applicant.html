@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title%}
+	<title>Applicant Form</title>
+{% endblock %}
+
+{% block content %}
+	<div class="root">
+		<div class="App">
+			<div id="root"></div>
+			<div>
+				<div class="logo">
+					<img src="{% static 'img/logoz-02.png' %}" alt="logo" />
+				</div>
+				<div class="headname">
+					<h1> Carrefour Career </h1>
+					<h3>Applicants personal information</h3>		
+				</div>
+				{% if messages %}
+					{% for message in messages %}
+						{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+							<div class="alert message alert-danger">
+								{{message}}
+							</div>
+						{% else %}
+							<div class="alert message alert-{{message.tags}}">
+								{{message}}
+							</div>
+						{% endif %}
+					{% endfor %}
+				{% endif %}
+			</div>
+			<form action="{% url 'add_applicant'%}" method="POST" enctype="multipart/form-data">
+				{% csrf_token %}
+				<div class="inputs">
+					<div class="inputes">
+						<label for="fname">სახელი</label>
+						<div class="posit">
+							<Input type="text" name="fname" id="fname" placeholder="Name" required/>
+						</div>
+					</div>
+
+					<div class="inputes">
+						<label for="lname">გვარი</label>
+						<div class="posit">
+							<Input type="text" id="lname" name="lname"  placeholder="Last Name" required />
+						</div>
+					</div>
+					<div class="inputes">
+						<label for="birth_date">დაბადების თარიღი</label>
+						<div class="posit">
+							<Input type="date" id="birth_date" name="birth_date" required/>
+						</div>
+					</div>
+
+					<div class="inputes">
+						<label for="wanted_position">სასურველი პოზიცია</label>
+						<div class="posit">
+							<select  name="wanted_position" id="wanted_position" required>
+								{% for position in positions %}
+									<option>{{position}}</option>
+								{% endfor %}
+							</select>
+						</div>
+					</div>
+					
+					<div class="inputes">
+						<label for="wanted_city">სასურველი ქალაქი</label>
+						<div class="posit">
+							<select  name="wanted_city" id="wanted_city" required>
+							{% for city in cities %}
+								<option>{{city}}</option>
+							{% endfor %}
+							</select>
+						</div>
+					</div>
+					<div class="inputes">
+						<label for="mobile_number">საკონტაქტო ნომერი</label>
+						<div class="posit">
+							<Input type="text" id="mobile_number" name="mobile_number" placeholder="Phone Number" pattern = "[0-9 ]{1,10}" title="შეიყვანეთ მხოლოდ რიცხვები" required/>
+						</div>
+					</div>
+					<div class="inputes">
+						<label for="address">საცხოვრებელი უბანი</label>
+						<div class="posit">
+							<Input type="text" name="address" id="address" placeholder="Address" required/>
+						</div>
+					</div>
+					<div class="inputes">
+						<input class="buttons" type="submit" value="გაგზავნა" />
+					</div>
+				</div>
+			</form>
+			<div class="foot">
+				<div>&copy; Copyright 2022</div>
+				<div>Brought to you by Carrefour Georgia</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

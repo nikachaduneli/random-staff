@@ -1,0 +1,187 @@
+.App {
+  font-family: sans-serif;
+  text-align: center;
+}
+
+@import url("https://fonts.googleapis.com/css2?family=Oswald:wght@300&display=swap");
+
+@font-face {
+  font-family: myFirstFont;
+  src: url(../fonts/bpg_nino_mtavruli_normal.ttf);
+}
+
+.notification {
+  position: fixed;
+  text-align: center;
+  /* width: 100%; */
+  left: 0;
+  top: 0;
+  z-index: 100000;
+  padding: 4px;
+  padding-left: 10px;
+  margin: auto;
+  border: 1px solid;
+  border-color: #d73c2b;
+  border-radius:0px 0px 5px 5px;
+  background: #6c9ffc;
+  background-color: #e43063;
+  color: #000000;
+  max-width: 200px;
+}
+
+
+* {
+  padding: 0;
+  margin: 0;
+}
+
+.message{
+  width: 60%;
+  margin-left: 20%;
+}
+
+
+.form-select {
+  width: 200px;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #495057;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 2px solid #0f4c75;
+  border-radius: 0.25rem;
+  transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+body {
+  background-color: #f7fbfc;
+}
+
+.logo img {
+  margin-top: 15px;
+  width: 200px;
+  height: 50px;
+}
+
+.headname {
+  margin-top: 35px;
+  color: #0f4c75;
+}
+
+.headname h3 {
+  padding: 15px;
+  color: #0f4c75;
+}
+
+.inputs {
+  display: flex;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+}
+
+.posit {
+  padding: 20px;
+}
+
+.posit input {
+  border-radius: 5px;
+  border: 2px solid #0f4c75;
+  padding: 1rem;
+  height: 30px;
+  width: 200px;
+}
+.posit select {
+  border-radius: 5px;
+  border: 2px solid #0f4c75;
+  height: 30px;
+  width: 200px;
+}
+
+.posit label {
+  font-size: 12px;
+}
+
+.inputes {
+  width: 30%;
+  /* background-color: #0f4c75; */
+  margin-top: 30px;
+}
+
+.file {
+  margin-top: 15px;
+}
+
+
+
+.comment{
+  word-break: break-all;
+  max-width: 12rem;
+}
+.buttons {
+  width: 150px;
+  height: 50px;
+  border-radius: 10px;
+  background-color: #3282b8;
+  border-color: #defcf9;
+  padding: 15px;
+  font-family: myFirstFont;
+  font-size: 15px;
+  cursor: pointer;
+  margin-top: 2.5rem;
+}
+
+.buttons:hover {
+  transform: scale(1.1);
+  background-color: #b83b5e;
+  transition-duration: 0.4s;
+}
+
+.foot {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 70px;
+  font-family: sans-serif;
+  align-items: center;
+  margin-bottom: 20px;
+  color: #0f4c75;
+  flex-direction: column;
+}
+
+::-webkit-file-upload-button {
+  width: 150px;
+  height: 50px;
+  border-radius: 10px;
+  background-color: #3282b8;
+  border-color: #defcf9;
+  border: none;
+}
+
+label {
+  font-family: myFirstFont;
+}
+
+@media (max-width: 600px) {
+  .inputs {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    right: 15px;
+  }
+}
+
+.hidden {
+  display: none;
+}
+
+.upload {
+  background-color: #3282b8;
+  width: 150px;
+  height: 50px;
+  padding: 10px;
+  position: relative;
+  top: 15px;
+  border-radius: 8px;
+  cursor: pointer;
+}

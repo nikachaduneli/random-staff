@@ -1,0 +1,47 @@
+<!DOCTIPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="static/main.css">
+        <title>{{title}}</title>
+    </head>
+    <body >
+        <form action="/result" method=post >
+            <table  style= "margin-left:40%;margin-top:20%;border-style: none ;border-radius: 5px;background-color:#ddd;" >
+                <tr>
+                    <td>
+                        <label>პირველი რიცხვი: <input type='text' placeholder="number..." name="first_num" > <label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label>მეორე რიცხვი: <input type='text' placeholder="number..." name="sec_num"></label>
+                    </td>
+                </tr>
+                <!--<tr>-->
+                <!--    <td>-->
+                <!--        <label>ოპერაციის ნიშანი: <input type='text' placeholder="(+, -, *, /, sqrt)" name="operation"> </label>-->
+                <!--    </td>-->
+                <!--</tr>-->
+                <tr>
+                    <td>
+                        <label>აირჩიეთ ოპერაცია:
+                            <select name='operation'>
+                                <option value='+'>+</option>
+                                <option value='-'>-</option>
+                                <option value='/'>/</option>
+                                <option value='*'>*</option>
+                                <option value='√'>√</option>
+                            </select>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="submit" value="დადასტურება">
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </body>
+</html>

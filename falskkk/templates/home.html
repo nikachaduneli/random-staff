@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<form action="search" method="POST">
+  <table>
+    <tr>
+      <td>სიტყვა</td>
+      <td><input type="text" name="phrase" width="60"></td>
+    </tr>
+    <tr>
+      <td>ასოები</td>
+      <td><input type="text" name="letters" width="60" value="აეიოუ"></td>
+    </tr>
+    <tr>
+      <td>
+        <input type="submit" value="ძიება">
+      </td>
+    </tr>
+  </table>
+</form>
+
+{% endblock %}

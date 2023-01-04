@@ -1,0 +1,349 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+<title>Applicants List</title>
+{% endblock %}
+
+{% block content%}
+<nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light">
+  <div class="navbar-nav mr-auto collapse navbar-collapse">
+    <form action="{% url 'applicants_list' %}" method="GET">
+      <div class="form-row">
+        <div class="col">
+          <input type="text" class="form-control" name="fname" placeholder="სახელი">
+        </div>
+        <div class="col">
+          <input type="text" class="form-control" name="lname" placeholder="გვარი">
+        </div>
+        <div class="col">
+          <input type="text" class="form-control" name="mobile_number" placeholder="ტელეფონის ნომერი">
+        </div>
+        <div class="col">
+          <select  class="form-control" name="wanted_city" id="wanted_city">
+            <option value="" disabled selected>სასურველი ქალაქი</option>
+            {% for city in cities %}
+              <option>{{city}}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="col">
+          <select class="form-control"  name="wanted_position" id="wanted_position">
+            <option value="" disabled selected>სასურველი პოზიცია</option>
+            {% for position in positions %}
+              <option>{{position}}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col">
+          <input type="text" class="form-control" name="address" placeholder="საცხოვრებელი უბანი">
+        </div>
+        <div class="col">
+          <Input type="text" placeholder="დაბადების თარიღი" class="form-control" name="birth_date"
+            onfocus="(this.type='date')" onblur="(this.type='text')" />
+        </div>
+        <div class="col">
+          <select class="form-control" name="color">
+            <option value="" disabled selected>ფერი</option>
+            {% for color in colors %}
+              <option>{{color}}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="col">
+          <Input type="text" placeholder="შევსების თარიღი" class="form-control" name="applie_date"
+            onfocus="(this.type='date')" onblur="(this.type='text')" />
+        </div>
+        <div class="col mt-1">
+          <button type="submit" class="mx-1 btn-sm btn-primary">ძებნა</button>
+          <a href="{% url 'applicants_list' %}">
+            <button type="button" class="mx-1 btn-sm btn-success">ყველას გამოჩენა</button>
+          </a>
+          <a id="excel" href="#">
+            <button type="button"  name="excel" class="mx-1 btn-sm btn-info">ექსელის შენახვა</button>
+          </a>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="navbar-nav">
+    <button type="button"  onclick="delete_applicants_dialog()" class="mx-1 btn-sm btn-warning">ყველა აპლიკანტის წაშლა</button>
+    <a href="{% url 'logout' %}">
+      <button type="button" class="mx-1 btn-sm btn-danger">გამოსვლა</button>
+    </a>
+  </div>
+</nav>
+<table class="table table-sm">
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">LastName</th>
+      <th scope="col">Mobile Number</th>
+      <th scope="col">Address</th>
+      <th scope="col">Wanted City</th>
+      <th scope="col">Wanted Position</th>
+      <th scope="col">Date Of Birth</th>
+      <th scope="col">Comments</th>
+    </tr>
+  </thead>
+  <tbody id="applicants_list">
+    {% if applicants %}
+    {% for applicant in applicants %}
+    <tr style="background-color:{{applicant.color}}" id="tr{{applicant.id}}">
+      <td>{{applicant.fname}}</td>
+      <td>{{applicant.lname}}</td>
+      <td>{{applicant.mobile_number}}</td>
+      <td>{{applicant.address}}</td>
+      <td>{{applicant.wanted_city}}</td>
+      <td>{{applicant.wanted_position}}</td>
+      <td>{{applicant.birth_date|date:"Y-m-d"}}</td>
+      <td>
+        <ul  id="rowcomm{{applicant.id}}">
+          {% for comment in applicant.comments.all %}
+            <li class="comment">{{comment.content}}</li>
+          {% endfor%}
+        </ul>
+      </td>
+      <td>
+        <textarea type="text" name="comment" placeholder="Comment" id="comm{{applicant.id}}"></textarea>
+      </td>
+      <td>
+        <select class="form-control" name="color" placeholder="Color" id="col{{applicant.id}}">
+          <option value="" disabled selected>ფერი</option>
+          {% for color in colors %}
+            <option>{{color}}</option>
+          {% endfor %}
+        </select>
+      </td>
+      <td>
+        <button class="btn btn-info" onclick="update_applicant({{applicant.id}})">შენახვა</button>
+      </td>
+    </tr>
+    {% endfor %}
+    {% endif %}
+  </tbody>
+</table>
+{% if is_paginated %}
+
+  {% if page_obj.has_previous %}
+    <a href="?page=1" class='pag btn btn-outline-info mb-4'><<</a>
+  {% endif %}
+  {% for num in page_obj.paginator.page_range %}
+    {% if page_obj.number == num %}
+      <a href="?page={{num}}" class='pag btn btn-info mb-4' >{{num}}</a>
+    {% elif page_obj.number|add:'3' > num and  page_obj.number|add:'-3' < num  %}
+      <a href="?page={{num}}" class='pag btn btn-outline-info mb-4' >{{num}}</a>
+    {% endif %}
+  {% endfor %}
+  {% if page_obj.has_next %}
+    <a href="?page={{page_obj.paginator.num_pages}}" class='pag btn btn-outline-info mb-4' >>></a>
+  {% endif %}
+{% endif %} 
+
+
+<script type="text/javascript">
+
+  var csrfcookie = function () {
+    var cookieValue = null,
+      name = 'csrftoken';
+    if (document.cookie && document.cookie !== '') {
+      var cookies = document.cookie.split(';');
+      for (var i = 0; i < cookies.length; i++) {
+        var cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) == (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  };
+  function ulr_for_excel(){
+
+    let a = document.getElementById('excel');
+    const queryString = window.location.search;
+    if(queryString[0] == '?'){
+      a.href =  "{% url 'applicants_list' %}"+queryString+'&excel=true';
+    }
+    else{
+      a.href =  "{% url 'applicants_list' %}"+'?excel=true';
+    }
+  }
+  function update_applicant(id) {
+    colors = {'წითელი' : '#EA5455',
+            'ყვითელი' : '#F9ED69',
+            'მწვანე' : '#00B8A9',
+            'ცისფერი' : '#3D84A8',
+            'ნაცრისფერი' : '#F0F0F0',
+            'სტაფილოსფერი' : '#F07B3F',
+            'თეთრი':'#FFFFFF'}
+    var color = document.querySelector('#col' + id).value
+    var comment = document.querySelector('#comm' + id).value
+    const xhttp = new XMLHttpRequest();
+    xhttp.open("POST", "{% url 'update_applicant' %}", true);
+    xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhttp.setRequestHeader('X-CSRFToken', csrfcookie());
+    xhttp.send('pk=' + id + '&color=' + color + '&comment=' + comment);
+    let colorselector = document.querySelector('#col' + id)
+    let commentfield = document.querySelector('#comm' + id)
+    colorselector.value = '';
+    commentfield.value = '';
+
+    row = document.getElementById('tr'+id)
+    row.style.backgroundColor = colors[color]
+    if(comment != ''){
+      let ul = document.getElementById("rowcomm"+id);
+      let li = document.createElement("li");
+      li.appendChild(document.createTextNode(comment));
+      li.className = 'comment';
+      ul.appendChild(li);
+    }
+  }
+  
+  function get_table_data(){
+    const xhttp = new XMLHttpRequest();
+    const queryString = window.location.search;
+    xhttp.onload = function(){
+      data = JSON.parse(xhttp.response)
+      applicants = data['applicants'];
+      comments = data['comments'];
+      add_new_rows(applicants,comments);
+      for(let i=0;i<applicants.length;i++){
+        try{
+          update_row(applicants[i]['id'],applicants[i]['color'],comments)
+        }catch(e){
+        }
+      }
+    }
+    xhttp.open('GET', "{% url 'update_applicants_list' %}"+queryString)
+    xhttp.send();
+  }
+
+function showNotification({top = 0, right = 10}) {
+
+      let notification = document.createElement('div');
+      notification.className = "notification";
+      notification.style.top = top + 'px';
+      notification.style.right = right + 'px';
+      notification.innerHTML ='new applicant';
+      document.body.append(notification);
+      playSound();
+      setTimeout(() => notification.remove(), 1500);
+    }
+
+  function playSound(){
+    let url = '../media/notification.mp3'
+    const audio = new Audio(url);
+    audio.play();
+}
+
+  function add_new_rows(applicants, comments){
+    var tbody = document.getElementById('applicants_list');
+    for(var i=0;i<applicants.length;i++){
+      applicant = applicants[i];
+      if(!document.getElementById('tr'+applicant['id'])){
+        var row = tbody.insertRow(0);
+        row.style.backgroundColor = applicant['color'];
+        row.id = 'tr'+applicant['id'];
+        var name = row.insertCell(0);
+        var lname = row.insertCell(1);
+        var number = row.insertCell(2);
+        var address = row.insertCell(3);
+        var city = row.insertCell(4);
+        var pos = row.insertCell(5);
+        var bthday = row.insertCell(6);
+        var comment = row.insertCell(7);
+        var comfield = row.insertCell(8);
+        var colfield = row.insertCell(9);
+        var savebtn = row.insertCell(10);
+        name.innerHTML = applicant['fname'];
+        lname.innerHTML = applicant['lname'];
+        number.innerHTML = applicant['mobile_number'];
+        address.innerHTML = applicant['address'];
+        city.innerHTML = applicant['wanted_city'];
+        pos.innerHTML = applicant['wanted_position'];
+        bthday.innerHTML = applicant['birth_date'];
+        comment.innerHTML = `
+        <ul  id="rowcomm${applicant.id}">
+        </ul>
+        `;
+        comfield.innerHTML = `
+        <textarea type="text" name="comment" placeholder="Comment" id="comm${applicant['id']}"></textarea>
+        `;
+        colfield.innerHTML = `
+        <select class="form-control" name="color" placeholder="Color" id="col${applicant['id']}">
+          <option value="" disabled selected>ფერი</option>
+          <option>მწვანე</option>
+          <option>თეთრი</option>
+          <option>წითელი</option>
+          <option>ყვითელი</option>
+          <option>ცისფერი</option>
+          <option>ნაცრისფერი</option>
+          <option>სტაფილოსფერი</option>
+        </select>
+        `;
+        savebtn.innerHTML = `
+        <button class="btn btn-info" onclick="update_applicant(${applicant['id']})">შენახვა</button>
+        `;
+        showNotification(0,10);
+      }
+    }
+  }
+  
+  function update_row(id, color, comments) {
+
+    if (color !== '') {
+      let tr = document.getElementById('tr' + id);
+      tr.style.backgroundColor = color;
+    }
+    let ul = document.getElementById("rowcomm"+id);
+    ul.innerHTML = '';
+
+    for(var i=0; i<comments.length; i++){
+      if(comments[i]['applicant_id'] == id){
+        let li = document.createElement("li");
+        li.appendChild(document.createTextNode(comments[i]['content']));
+        li.className = 'comment';
+        ul.appendChild(li);
+      }
+    }    
+  }
+
+  function delete_applicants_dialog(){
+    if (confirm("ნამდვილად გინდათ ყველა აპლიკანტის წაშლა?")) {
+      delete_all_applicants();
+    }
+
+  }
+
+  function delete_all_applicants(){
+    const xhttp = new XMLHttpRequest();
+    xhttp.open("DELETE", "{% url 'delete_applicans' %}", true);
+    xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhttp.setRequestHeader('X-CSRFToken', csrfcookie());
+    xhttp.send();
+    window.location.reload();
+  }
+
+  function alter_pg_href(){
+    var pgs = document.getElementsByClassName('pag');
+    var query = window.location.search;
+    var href = '';
+    for(var i=0;i<pgs.length;i++){
+      href = pgs[i].getAttribute('href')
+      if (query.indexOf('?fname') !==-1){
+        query = query.substring(query.indexOf('?fname'))
+        pgs[i].href = href + '&'+ query
+      }
+    }
+  }
+  setInterval(function(){
+    get_table_data()}, 10000);
+
+</script>
+
+{% endblock %}

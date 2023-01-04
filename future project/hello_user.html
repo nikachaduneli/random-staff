@@ -1,0 +1,10 @@
+{%extends "base.html"%}
+
+{%block content%}
+  {% if lname and fname%}
+    <h2>hello {{fname}} {{lname}} </h2>
+  {% else %}
+    <h2>hello </h2>
+  {% endif %}
+{%endblock%}
+

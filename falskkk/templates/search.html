@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<table>
+  <tr>
+    <td>გამოგზვნილი სიტყვა: </td>
+    <td>{{phrase}}</td>
+  </tr>
+  <tr>
+    <td>გამოგზვნილი ასოები: </td>
+    <td>{{letters}}</td>
+  </tr>
+  <tr>
+    <td>
+      <p>ნაპოვნი ასოები: {{result}} </p>
+    </td>
+  </tr>
+</table>
+{% endblock %}
